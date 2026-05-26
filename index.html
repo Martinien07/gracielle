@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gracielle Agbeve – Éducatrice à la Petite Enfance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== VARIABLES ===== */
+    :root {
+      --cream: #FAF7F2;
+      --warm-white: #FDF9F4;
+      --gold: #C8955A;
+      --gold-light: #E8C49A;
+      --deep: #1A1208;
+      --text: #2D2416;
+      --text-light: #6B5A46;
+      --accent: #E8A87C;
+      --accent2: #A87C5A;
+      --section-gap: 120px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ===== CANVAS FEUX D'ARTIFICE ===== */
+    #fireworks-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ===== BALLONS ===== */
+    .balloon-container {
+      position: fixed;
+      bottom: -200px;
+      left: 0; right: 0;
+      pointer-events: none;
+      z-index: 9998;
+    }
+    .balloon {
+      position: absolute;
+      bottom: 0;
+      font-size: 3rem;
+      animation: floatUp linear infinite;
+      opacity: 0.9;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(-5deg); opacity: 0.9; }
+      25% { transform: translateY(-25vh) rotate(5deg); }
+      50% { transform: translateY(-50vh) rotate(-3deg); }
+      75% { transform: translateY(-75vh) rotate(4deg); }
+      100% { transform: translateY(-110vh) rotate(-2deg); opacity: 0; }
+    }
+
+    /* ===== VOEUX OVERLAY ===== */
+    #bday-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      animation: fadeIn 1s ease;
+    }
+    #bday-overlay.hidden { display: none; }
+
+    .bday-card {
+      background: linear-gradient(135deg, #FAF0DC 0%, #FFF5E0 50%, #FAF0DC 100%);
+      border: 3px solid var(--gold);
+      border-radius: 30px;
+      padding: 60px 70px;
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(200,149,90,0.4);
+      animation: cardPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+    }
+    @keyframes cardPop {
+      from { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+      to { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .bday-emoji { font-size: 4rem; display: block; margin-bottom: 16px; animation: bounce 1s ease infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    .bday-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: var(--gold);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .bday-msg {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .bday-close {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .bday-close:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,149,90,0.5); }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(200,149,90,0.15);
+      transition: all 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 80px 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--deep);
+      margin-bottom: 8px;
+    }
+    .hero-name span { color: var(--gold); font-style: italic; }
+
+    .hero-titre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-style: italic;
+      color: var(--text-light);
+      margin-bottom: 32px;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      max-width: 400px;
+      margin-bottom: 48px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: white;
+      padding: 14px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+      border: 2px solid var(--gold);
+    }
+    .btn-primary:hover { background: transparent; color: var(--gold); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(200,149,90,0.3); }
+
+    .btn-secondary {
+      padding: 14px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      border: 2px solid rgba(200,149,90,0.4);
+      color: var(--text-light);
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-photo-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-photo-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #F5E6D0 0%, #EDD5B5 100%);
+    }
+
+    .hero-photo-frame {
+      position: relative;
+      z-index: 2;
+      width: 380px;
+      height: 460px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      overflow: hidden;
+      border: 4px solid white;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+    }
+
+    .hero-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #E8C49A 0%, #C8955A 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 5rem;
+    }
+
+    .hero-decoration {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(200,149,90,0.1);
+      top: -50px; right: -50px;
+    }
+    .hero-decoration-2 {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 2px solid rgba(200,149,90,0.25);
+      bottom: 80px; left: 60px;
+    }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 60px;
+      left: 80px;
+      display: flex;
+      gap: 48px;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      display: block;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-light);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: scrollHint 2s ease infinite;
+    }
+    .scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: var(--gold);
+      animation: extendLine 2s ease infinite;
+    }
+    @keyframes scrollHint { 0%,100%{opacity:0.5} 50%{opacity:1} }
+    @keyframes extendLine { 0%,100%{scaleY:0.5} 50%{scaleY:1} }
+
+    /* ===== SECTION STYLE ===== */
+    section { padding: var(--section-gap) 80px; }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(200,149,90,0.25);
+      max-width: 80px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--deep);
+      margin-bottom: 60px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ===== À PROPOS ===== */
+    #apropos {
+      background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .apropos-text p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .competences-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .comp-item { }
+    .comp-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+    .comp-pct { color: var(--gold); font-weight: 500; }
+    .comp-bar-bg {
+      height: 4px;
+      background: rgba(200,149,90,0.15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .comp-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--accent) 100%);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ===== EXPÉRIENCES ===== */
+    #experiences {
+      background: var(--cream);
+    }
+
+    .exp-timeline {
+      position: relative;
+      padding-left: 60px;
+    }
+    .exp-timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+
+    .exp-item {
+      position: relative;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.7s ease;
+    }
+    .exp-item.visible { opacity: 1; transform: translateX(0); }
+
+    .exp-dot {
+      position: absolute;
+      left: -48px;
+      top: 10px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 0 3px rgba(200,149,90,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .exp-period {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .exp-card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      border-left: 4px solid;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .exp-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+
+    .exp-poste {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--deep);
+      margin-bottom: 6px;
+    }
+    .exp-entreprise {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .exp-entreprise::before { content: ''; width: 20px; height: 1px; background: var(--gold-light); }
+
+    .exp-taches {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .exp-taches li {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .exp-taches li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    /* ===== FORMATION ===== */
+    #formation {
+      background: var(--warm-white);
+    }
+
+    .formation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .formation-card {
+      background: white;
+      border-radius: 24px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+      border: 1px solid rgba(200,149,90,0.15);
+      transition: all 0.4s;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .formation-card.visible { opacity: 1; transform: translateY(0); }
+    .formation-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(200,149,90,0.15); }
+
+    .formation-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 20px;
+    }
+    .formation-diplome {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--deep);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .formation-etab {
+      font-size: 0.9rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .formation-meta {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* ===== CONTACT ===== */
+    #contact {
+      background: var(--deep);
+      color: white;
+      text-align: center;
+    }
+    #contact .section-label { color: var(--gold-light); }
+    #contact .section-title { color: white; }
+    #contact .section-title em { color: var(--gold-light); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .contact-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px 24px;
+      transition: all 0.3s;
+    }
+    .contact-item:hover { background: rgba(200,149,90,0.15); border-color: rgba(200,149,90,0.4); transform: translateY(-4px); }
+
+    .contact-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .contact-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+    .contact-val { font-size: 0.95rem; color: white; word-break: break-word; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #0D0905;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      padding: 30px;
+      font-size: 0.8rem;
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 100px 28px 50px; }
+      .hero-right { display: none; }
+      section { padding: 80px 28px; }
+      #apropos { grid-template-columns: 1fr; }
+      .formation-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero-stats { left: 28px; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Canvas feux d'artifice -->
+<canvas id="fireworks-canvas"></canvas>
+
+<!-- Conteneur ballons -->
+<div class="balloon-container" id="balloon-container"></div>
+
+<!-- Overlay anniversaire -->
+<div id="bday-overlay" class="hidden">
+  <div class="bday-card">
+    <span class="bday-emoji">🎂</span>
+    <h1 class="bday-title" id="bday-title">Joyeux Anniversaire Gracielle !</h1>
+    <p class="bday-msg" id="bday-msg">Que cette nouvelle année t'apporte bonheur, santé et succès dans tout ce que tu entreprends !</p>
+    <button class="bday-close" onclick="fermerAnniversaire()">Merci ! 🎉</button>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <span class="nav-logo">G. Agbeve</span>
+  <ul class="nav-links">
+    <li><a href="#apropos">À Propos</a></li>
+    <li><a href="#experiences">Expériences</a></li>
+    <li><a href="#formation">Formation</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Portfolio Professionnel</div>
+    <h1 class="hero-name">
+      <span id="hero-prenom">Agbeve M.</span><br>
+      <span id="hero-nom">Gracielle</span>
+    </h1>
+    <p class="hero-titre" id="hero-titre">Éducatrice à la Petite Enfance</p>
+    <p class="hero-tagline" id="hero-tagline">Passionnée par l'éveil et le développement des enfants</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Me Contacter</a>
+      <a href="#experiences" class="btn-secondary">Voir mon parcours</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-bg"></div>
+      <div class="hero-decoration"></div>
+      <div class="hero-decoration-2"></div>
+      <div class="hero-photo-frame" id="hero-photo-frame">
+        <div class="hero-photo-placeholder" id="photo-placeholder">
+          <span>✨</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">5+</span>
+      <span class="stat-label">Années d'expérience</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Secteurs d'activité</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">Langues</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">Défiler</div>
+</section>
+
+<!-- À PROPOS -->
+<section id="apropos">
+  <div class="apropos-text reveal">
+    <div class="section-label">À Propos</div>
+    <h2 class="section-title">Une professionnelle <em>dévouée</em></h2>
+    <p id="apropos-texte">Professionnelle dévouée avec une formation solide en gestion internationale et en éducation à la petite enfance. Je crois profondément que les premières années de vie sont fondatrices, et je m'engage à créer des environnements sécurisants, stimulants et bienveillants pour chaque enfant.</p>
+  </div>
+  <div class="competences-grid reveal" id="competences-container">
+    <!-- Injecté par JS -->
+  </div>
+</section>
+
+<!-- EXPÉRIENCES -->
+<section id="experiences">
+  <div class="section-label">Parcours Professionnel</div>
+  <h2 class="section-title">Mes <em>Expériences</em></h2>
+  <div class="exp-timeline" id="exp-timeline">
+    <!-- Injecté par JS -->
+  </div>
+</section>
+
+<!-- FORMATION -->
+<section id="formation">
+  <div class="section-label">Formation</div>
+  <h2 class="section-title reveal">Mon <em>Éducation</em></h2>
+  <div class="formation-grid" id="formation-grid">
+    <!-- Injecté par JS -->
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <h2 class="section-title">Travaillons <em>ensemble</em></h2>
+  <div class="contact-grid" id="contact-grid">
+    <!-- Injecté par JS -->
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Gracielle Agbeve · Montréal, QC · Fait avec ❤️</p>
+</footer>
+
+<script src="data.js"></script>
+<script>
+/* =====================================================
+   INITIALISATION
+===================================================== */
+chargerDonnees();
+const D = SITE_DATA;
+
+/* =====================================================
+   REMPLIR LES SECTIONS
+===================================================== */
+function init() {
+  // Hero
+  document.getElementById('hero-prenom').textContent = D.hero.prenom;
+  document.getElementById('hero-nom').textContent = D.hero.nom;
+  document.getElementById('hero-titre').textContent = D.hero.titre;
+  document.getElementById('hero-tagline').textContent = D.hero.tagline;
+
+  if (D.hero.photo) {
+    const frame = document.getElementById('hero-photo-frame');
+    frame.innerHTML = `<img src="${D.hero.photo}" alt="${D.hero.nom}" />`;
+  }
+
+  // À propos
+  document.getElementById('apropos-texte').textContent = D.apropos.texte;
+
+  // Compétences
+  const compContainer = document.getElementById('competences-container');
+  compContainer.innerHTML = D.competences.map(c => `
+    <div class="comp-item">
+      <div class="comp-header">
+        <span>${c.nom}</span>
+        <span class="comp-pct">${c.niveau}%</span>
+      </div>
+      <div class="comp-bar-bg">
+        <div class="comp-bar" data-niveau="${c.niveau}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Expériences
+  const timeline = document.getElementById('exp-timeline');
+  timeline.innerHTML = D.experiences.map((exp, i) => `
+    <div class="exp-item" style="transition-delay: ${i * 0.1}s">
+      <div class="exp-dot">${exp.icone}</div>
+      <div class="exp-period">${exp.periode}</div>
+      <div class="exp-card" style="border-color: ${exp.couleur}">
+        <h3 class="exp-poste">${exp.poste}</h3>
+        <p class="exp-entreprise">${exp.entreprise}</p>
+        <ul class="exp-taches">
+          ${exp.taches.map(t => `<li>${t}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+
+  // Formation
+  const formGrid = document.getElementById('formation-grid');
+  formGrid.innerHTML = D.formations.map((f, i) => `
+    <div class="formation-card" style="transition-delay: ${i * 0.15}s">
+      <span class="formation-icon">${f.icone}</span>
+      <h3 class="formation-diplome">${f.diplome}</h3>
+      <p class="formation-etab">${f.etablissement}</p>
+      <p class="formation-meta">${f.lieu} · ${f.annee}</p>
+    </div>
+  `).join('');
+
+  // Contact
+  const cGrid = document.getElementById('contact-grid');
+  cGrid.innerHTML = `
+    <div class="contact-item">
+      <span class="contact-icon">📞</span>
+      <p class="contact-label">Téléphone</p>
+      <p class="contact-val">${D.contact.telephone}</p>
+    </div>
+    <div class="contact-item">
+      <span class="contact-icon">✉️</span>
+      <p class="contact-label">Email</p>
+      <p class="contact-val">${D.contact.email}</p>
+    </div>
+    <div class="contact-item">
+      <span class="contact-icon">📍</span>
+      <p class="contact-label">Localisation</p>
+      <p class="contact-val">${D.contact.ville}</p>
+    </div>
+  `;
+
+  // Anniversaire
+  verifierAnniversaire();
+}
+
+/* =====================================================
+   ANIMATIONS AU SCROLL
+===================================================== */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Animer les barres compétences
+      entry.target.querySelectorAll('.comp-bar').forEach(bar => {
+        setTimeout(() => { bar.style.width = bar.dataset.niveau + '%'; }, 100);
+      });
+    }
+  });
+}, { threshold: 0.1 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  document.querySelectorAll('.reveal, .exp-item, .formation-card').forEach(el => observer.observe(el));
+});
+
+/* =====================================================
+   ANNIVERSAIRE
+===================================================== */
+function estAnniversaire() {
+  if (!D.anniversaire.actif) return false;
+  const now = new Date();
+  return now.getDate() === D.anniversaire.jour && (now.getMonth() + 1) === D.anniversaire.mois;
+}
+
+function verifierAnniversaire() {
+  const testMode = new URLSearchParams(window.location.search).get('testBday');
+  if (!estAnniversaire() && !testMode) return;
+  // Afficher overlay
+  const overlay = document.getElementById('bday-overlay');
+  document.getElementById('bday-title').textContent = D.anniversaire.message;
+  document.getElementById('bday-msg').textContent = D.anniversaire.sousMessage;
+  overlay.classList.remove('hidden');
+  // Démarrer les effets
+  demarrerBallons();
+  demarrerFeuArtifice();
+  // Répéter feux d'artifice toutes les 8s
+  setInterval(demarrerFeuArtifice, 8000);
+}
+
+function fermerAnniversaire() {
+  document.getElementById('bday-overlay').classList.add('hidden');
+}
+
+/* =====================================================
+   BALLONS
+===================================================== */
+const ballonEmojis = ['🎈', '🎈', '🎈', '🎉', '🎊', '🎈', '🎁', '🎈'];
+
+function demarrerBallons() {
+  const container = document.getElementById('balloon-container');
+  function creerBallon() {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.textContent = ballonEmojis[Math.floor(Math.random() * ballonEmojis.length)];
+    b.style.left = Math.random() * 100 + '%';
+    const duration = 6 + Math.random() * 8;
+    b.style.animationDuration = duration + 's';
+    b.style.animationDelay = '0s';
+    b.style.fontSize = (2 + Math.random() * 2) + 'rem';
+    container.appendChild(b);
+    setTimeout(() => b.remove(), duration * 1000);
+  }
+  for (let i = 0; i < 8; i++) {
+    setTimeout(creerBallon, i * 400);
+  }
+  setInterval(() => {
+    if (Math.random() > 0.4) creerBallon();
+  }, 1200);
+}
+
+/* =====================================================
+   FEUX D'ARTIFICE
+===================================================== */
+const canvas = document.getElementById('fireworks-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.alpha = 1;
+    this.color = color;
+    this.size = 2 + Math.random() * 3;
+    this.gravity = 0.12;
+    this.friction = 0.97;
+  }
+  update() {
+    this.vx *= this.friction;
+    this.vy *= this.friction;
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= 0.016;
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.fillStyle = this.color;
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const fwColors = ['#FFD700','#FF6B8A','#7CB9E8','#A8E87C','#E8A87C','#FF9FF3','#FFFFFF','#FFB347'];
+
+function lancerExplosion(x, y) {
+  const color = fwColors[Math.floor(Math.random() * fwColors.length)];
+  for (let i = 0; i < 80; i++) {
+    particles.push(new Particle(x, y, color));
+  }
+}
+
+function demarrerFeuArtifice() {
+  const count = 5 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const x = 100 + Math.random() * (canvas.width - 200);
+      const y = 80 + Math.random() * (canvas.height * 0.55);
+      lancerExplosion(x, y);
+    }, i * 200);
+  }
+}
+
+function animLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.alpha > 0);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+
+// Clic pour feu d'artifice manuel
+canvas.addEventListener('click', e => {
+  if (estAnniversaire()) lancerExplosion(e.clientX, e.clientY);
+});
+</script>
+</body>
+</html>
