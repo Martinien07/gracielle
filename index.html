@@ -634,14 +634,40 @@
     @media (max-width: 900px) {
       nav { padding: 16px 24px; }
       .nav-links { display: none; }
-      #hero { grid-template-columns: 1fr; }
-      .hero-left { padding: 100px 28px 50px; }
-      .hero-right { display: none; }
+
+      #hero {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        min-height: 100vh;
+      }
+
+      .hero-right {
+        display: flex !important;
+        order: -1;
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-photo-wrap { position: relative; width: 100%; }
+      .hero-photo-bg { position: absolute; inset: 0; }
+      .hero-photo-frame {
+        width: 180px;
+        height: 220px;
+        margin: 48px auto 0;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-decoration { display: none; }
+      .hero-decoration-2 { display: none; }
+
+      .hero-left { padding: 28px 28px 110px; order: 0; }
+      .hero-stats { left: 28px; gap: 28px; bottom: 24px; }
+      .scroll-hint { display: none; }
+
       section { padding: 80px 28px; }
       #apropos { grid-template-columns: 1fr; }
       .formation-grid { grid-template-columns: 1fr; }
       .contact-grid { grid-template-columns: 1fr; }
-      .hero-stats { left: 28px; gap: 32px; }
     }
   </style>
 </head>
