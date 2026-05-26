@@ -208,6 +208,43 @@
       transition:opacity 0.2s; letter-spacing:0.04em;
     }
     .btn-save:hover { opacity:0.88; }
+    .btn-export {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 13px 24px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-export:hover { background: rgba(200,149,90,0.12); }
+    .save-bar-btns { display: flex; gap: 12px; align-items: center; }
+
+    /* Export instructions banner */
+    .export-banner {
+      display: none;
+      background: rgba(124,185,168,0.1);
+      border: 1px solid rgba(124,185,168,0.35);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .export-banner.show { display: block; }
+    .export-banner strong { color: #7CB9A8; }
+    .export-banner ol { padding-left: 20px; margin-top: 8px; }
+    .export-banner li { margin-bottom: 4px; }
+    .export-banner code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 8px; border-radius: 4px;
+      font-family: monospace; font-size: 0.82rem;
+      color: var(--gold-light);
+    }
 
     /* Separator */
     .sep { border:none; border-top:1px solid var(--border); margin:24px 0; }
@@ -441,10 +478,27 @@
       </div>
     </div>
 
+    <!-- Export banner -->
+    <div class="export-banner" id="export-banner">
+      <strong>📦 Étapes pour mettre à jour GitHub :</strong>
+      <ol>
+        <li>Le fichier <code>data.js</code> vient d'être téléchargé sur ton appareil</li>
+        <li>Va sur <strong>github.com</strong> → ton repo → clique sur <code>data.js</code></li>
+        <li>Clique le ✏️ stylo (Edit) → sélectionne tout → colle le nouveau contenu</li>
+        <li>Ou glisse le fichier via <strong>Add file → Upload files</strong></li>
+        <li>Clique <strong>Commit changes</strong> — le site est mis à jour partout ✅</li>
+      </ol>
+    </div>
+
     <!-- Save bar -->
     <div class="save-bar">
       <span class="save-status" id="save-status">Modifications non sauvegardées</span>
-      <button class="btn-save" onclick="sauvegarder()">💾 Sauvegarder</button>
+      <div class="save-bar-btns">
+        <button class="btn-export" onclick="exporterDataJs()" title="Télécharge data.js à uploader sur GitHub">
+          📦 Exporter pour GitHub
+        </button>
+        <button class="btn-save" onclick="sauvegarder()">💾 Sauvegarder</button>
+      </div>
     </div>
 
   </main>
@@ -656,6 +710,56 @@ function sauvegarder() {
     status.textContent = 'Modifications non sauvegardées';
     status.className = 'save-status';
   }, 3000);
+}
+
+/* ===== EXPORTER DATA.JS ===== */
+function exporterDataJs() {
+  collectData();
+  Object.assign(SITE_DATA, D);
+  sauvegarderDonnees();
+
+  const json = JSON.stringify(D, null, 2);
+  const fileContent = `// ============================================
+// DONNÉES DU SITE - Modifiables via l'admin
+// ============================================
+const SITE_DATA = ${json};
+
+// Sauvegarder et charger depuis localStorage
+function sauvegarderDonnees() {
+  localStorage.setItem('siteData', JSON.stringify(SITE_DATA));
+}
+
+function chargerDonnees() {
+  const saved = localStorage.getItem('siteData');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      Object.assign(SITE_DATA, parsed);
+    } catch(e) {}
+  }
+}`;
+
+  const blob = new Blob([fileContent], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.js';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Afficher les instructions
+  const banner = document.getElementById('export-banner');
+  banner.classList.add('show');
+  banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Mettre à jour le statut
+  const status = document.getElementById('save-status');
+  status.textContent = '✓ data.js exporté — upload-le sur GitHub !';
+  status.className = 'save-status ok';
+  setTimeout(() => {
+    status.textContent = 'Modifications non sauvegardées';
+    status.className = 'save-status';
+  }, 8000);
 }
 
 /* ===== TEST ANNIVERSAIRE ===== */
