@@ -851,8 +851,9 @@ function init() {
     </div>
   `;
 
-  // Anniversaire
+  // Anniversaire — vérification immédiate + timer toutes les 30 secondes
   verifierAnniversaire();
+  setInterval(verifierAnniversaire, 30000);
 }
 
 /* =====================================================
@@ -884,9 +885,13 @@ function estAnniversaire() {
   return now.getDate() === D.anniversaire.jour && (now.getMonth() + 1) === D.anniversaire.mois;
 }
 
+let bdayDeclenche = false;
+
 function verifierAnniversaire() {
   const testMode = new URLSearchParams(window.location.search).get('testBday');
   if (!estAnniversaire() && !testMode) return;
+  if (bdayDeclenche && !testMode) return; // déjà déclenché, pas de doublon
+  bdayDeclenche = true;
   // Afficher overlay
   const overlay = document.getElementById('bday-overlay');
   document.getElementById('bday-title').textContent = D.anniversaire.message;
